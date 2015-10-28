@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNull;
 
 import org.apache.sling.installer.api.tasks.InstallTaskBlackList;
 import org.apache.sling.installer.core.impl.tasks.BundleInfo;
-import org.apache.sling.installer.it.OsgiInstallerTestBase.BundleEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -159,100 +158,97 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
 
     }
 
-    // @Test
-    // public void testUninstallWithBlacklistedIntermediateVersion() throws
-    // Exception {
-    // final String symbolicName = "osgi-installer-testbundle";
-    //
-    // assertNull("Test bundle must not be present before test",
-    // findBundle(symbolicName));
-    //
-    // // Install first test bundle and check version
-    // long bundleId = 0;
-    // {
-    // assertNull("Test bundle must be absent before installing",
-    // findBundle(symbolicName));
-    // final Object listener = this.startObservingBundleEvents();
-    // installer.updateResources(URL_SCHEME, getInstallableResource(
-    // getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.0.jar")), null);
-    // this.waitForBundleEvents(symbolicName + " must be installed", listener,
-    // new BundleEvent(symbolicName, "1.0",
-    // org.osgi.framework.BundleEvent.INSTALLED),
-    // new BundleEvent(symbolicName, "1.0",
-    // org.osgi.framework.BundleEvent.STARTED));
-    // final Bundle b = assertBundle("After installing", symbolicName, "1.0",
-    // Bundle.ACTIVE);
-    // bundleId = b.getBundleId();
-    // }
-    //
-    // // Upgrade to later version, verify
-    // {
-    // final Object listener = this.startObservingBundleEvents();
-    // installer.updateResources(URL_SCHEME, getInstallableResource(
-    // getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.1.jar"), "digestA"),
-    // null);
-    // this.waitForBundleEvents(symbolicName + " must be installed", listener,
-    // new BundleEvent(symbolicName, "1.0",
-    // org.osgi.framework.BundleEvent.STOPPED),
-    // new BundleEvent(symbolicName, "1.1",
-    // org.osgi.framework.BundleEvent.STARTED));
-    // final Bundle b = assertBundle("After updating to 1.1", symbolicName,
-    // "1.1", Bundle.ACTIVE);
-    // assertEquals("Bundle ID must not change after update", bundleId,
-    // b.getBundleId());
-    // }
-    //
-    // // upgrade to 3rd version
-    // {
-    // final Object listener = this.startObservingBundleEvents();
-    // installer.updateResources(URL_SCHEME, getInstallableResource(
-    // getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.2.jar"), "digestA"),
-    // null);
-    // this.waitForBundleEvents(symbolicName + " must be installed", listener,
-    // new BundleEvent(symbolicName, "1.1",
-    // org.osgi.framework.BundleEvent.STOPPED),
-    // new BundleEvent(symbolicName, "1.2",
-    // org.osgi.framework.BundleEvent.STARTED));
-    // final Bundle b = assertBundle("After updating to 1.2", symbolicName,
-    // "1.2", Bundle.ACTIVE);
-    // assertEquals("Bundle ID must not change after update", bundleId,
-    // b.getBundleId());
-    // }
-    //
-    // // configure blacklist bundle to ignore 1.1 version
-    // InstallTaskBlackList bl = new InstallTaskBlackList() {
-    //
-    // public boolean isBlacklisted(String symbolicName, Version version) {
-    // boolean isSameSymbolicName =
-    // "osgi-installer-testbundle".equals(symbolicName);
-    // boolean isBlackListVersion = version.equals(new Version("1.1"));
-    // return isSameSymbolicName && isBlackListVersion;
-    // }
-    // };
-    //
-    // ServiceRegistration<?> sr =
-    // bundleContext.registerService(InstallTaskBlackList.class.getName(), bl,
-    // null);
-    //
-    // // Try to uninstall current version and verify uninstall instead of
-    // // downgrade to blacklisted version
-    // {
-    // final Object listener = this.startObservingBundleEvents();
-    // installer.updateResources(URL_SCHEME, null, getNonInstallableResourceUrl(
-    // getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.2.jar")));
-    // this.waitForBundleEvents(symbolicName + " must be installed", listener,
-    // new BundleEvent(symbolicName, "1.2",
-    // org.osgi.framework.BundleEvent.STOPPED),
-    // new BundleEvent(symbolicName, "1.0",
-    // org.osgi.framework.BundleEvent.STARTED));
-    //
-    // final Bundle b = assertBundle("After uninstalling 1.2", symbolicName,
-    // "1.0", Bundle.ACTIVE);
-    // assertEquals("Bundle ID must not change after update", bundleId,
-    // b.getBundleId());
-    // }
-    // sr.unregister();
-    //
-    // }
+    @Test
+    public void testUninstallWithBlacklistedIntermediateVersion() throws Exception {
+        final String symbolicName = "osgi-installer-testbundle";
+
+        assertNull("Test bundle must not be present before test",
+            findBundle(symbolicName));
+
+        // Install first test bundle and check version
+        long bundleId = 0;
+        {
+            assertNull("Test bundle must be absent before installing",
+                findBundle(symbolicName));
+            final Object listener = this.startObservingBundleEvents();
+            installer.updateResources(URL_SCHEME, getInstallableResource(
+                getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.0.jar")), null);
+            this.waitForBundleEvents(symbolicName + " must be installed", listener,
+                new BundleEvent(symbolicName, "1.0",
+                    org.osgi.framework.BundleEvent.INSTALLED),
+                new BundleEvent(symbolicName, "1.0",
+                    org.osgi.framework.BundleEvent.STARTED));
+            final Bundle b = assertBundle("After installing", symbolicName, "1.0",
+                Bundle.ACTIVE);
+            bundleId = b.getBundleId();
+        }
+
+        // Upgrade to later version, verify
+        {
+            final Object listener = this.startObservingBundleEvents();
+            installer.updateResources(URL_SCHEME, getInstallableResource(
+                getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.1.jar"), "digestA"),
+                null);
+            this.waitForBundleEvents(symbolicName + " must be installed", listener,
+                new BundleEvent(symbolicName, "1.0",
+                    org.osgi.framework.BundleEvent.STOPPED),
+                new BundleEvent(symbolicName, "1.1",
+                    org.osgi.framework.BundleEvent.STARTED));
+            final Bundle b = assertBundle("After updating to 1.1", symbolicName,
+                "1.1", Bundle.ACTIVE);
+            assertEquals("Bundle ID must not change after update", bundleId,
+                b.getBundleId());
+        }
+
+        // upgrade to 3rd version
+        {
+            final Object listener = this.startObservingBundleEvents();
+            installer.updateResources(URL_SCHEME, getInstallableResource(
+                getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.2.jar"), "digestA"),
+                null);
+            this.waitForBundleEvents(symbolicName + " must be installed", listener,
+                new BundleEvent(symbolicName, "1.1",
+                    org.osgi.framework.BundleEvent.STOPPED),
+                new BundleEvent(symbolicName, "1.2",
+                    org.osgi.framework.BundleEvent.STARTED));
+            final Bundle b = assertBundle("After updating to 1.2", symbolicName,
+                "1.2", Bundle.ACTIVE);
+            assertEquals("Bundle ID must not change after update", bundleId,
+                b.getBundleId());
+        }
+
+        // configure blacklist bundle to ignore 1.1 version
+        InstallTaskBlackList bl = new InstallTaskBlackList() {
+
+            public boolean isBlacklisted(String symbolicName, Version version) {
+                boolean isSameSymbolicName = "osgi-installer-testbundle".equals(symbolicName);
+                boolean isBlackListVersion = version.equals(new Version("1.1"));
+                return isSameSymbolicName && isBlackListVersion;
+            }
+        };
+
+        ServiceRegistration<?> sr = bundleContext.registerService(InstallTaskBlackList.class.getName(), bl,
+            null);
+
+        // Try to uninstall current version and verify uninstall instead of
+        // downgrade to blacklisted version
+        {
+            final Object listener = this.startObservingBundleEvents();
+            installer.updateResources(URL_SCHEME, null, getNonInstallableResourceUrl(
+                getTestBundle(BUNDLE_BASE_NAME + "-testbundle-1.2.jar")));
+            this.waitForBundleEvents(symbolicName + " must be installed", listener,
+                new BundleEvent(symbolicName, "1.2",
+                    org.osgi.framework.BundleEvent.STOPPED),
+                new BundleEvent(symbolicName, "1.0",
+                    org.osgi.framework.BundleEvent.STARTED));
+
+            final Bundle b = assertBundle("After uninstalling 1.2", symbolicName,
+                "1.0", Bundle.ACTIVE);
+            assertEquals("Bundle ID must not change after update", bundleId,
+                b.getBundleId());
+        }
+        sr.unregister();
+
+    }
 
 }
