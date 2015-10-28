@@ -106,6 +106,7 @@ public class BundleTaskCreator
             this.taskSupport.deactivate();
             this.taskSupport = null;
         }
+        this.st.close();
     }
 
     /**
@@ -187,7 +188,8 @@ public class BundleTaskCreator
                 TaskResource second = null;
                 while (candidatesIt != null && second == null && candidatesIt.hasNext()) {
                     TaskResource candidate = candidatesIt.next();
-                    if (isBundleBlackListed(symbolicName, candidate.getVersion())) {
+                    boolean sameVersion = toActivate.getVersion().equals(candidate.getVersion());
+                    if (!sameVersion && !isBundleBlackListed(symbolicName, candidate.getVersion())) {
                         second = candidate;
                     }
                 }
