@@ -34,6 +34,7 @@ import org.apache.sling.installer.api.tasks.TaskResource;
 import org.apache.sling.installer.api.tasks.TaskResourceGroup;
 import org.apache.sling.installer.core.impl.InternalService;
 import org.apache.sling.installer.core.impl.PersistentResourceList;
+import org.apache.sling.installer.core.impl.RegisteredResourceImpl;
 import org.apache.sling.installer.core.impl.Util;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -189,8 +190,13 @@ public class BundleTaskCreator
                 while (candidatesIt != null && second == null && candidatesIt.hasNext()) {
                     TaskResource candidate = candidatesIt.next();
                     boolean sameVersion = toActivate.getVersion().equals(candidate.getVersion());
-                    if (!sameVersion && !isBundleBlackListed(symbolicName, candidate.getVersion())) {
-                        second = candidate;
+                    if (!sameVersion) {
+                        if (isBundleBlackListed(symbolicName, candidate.getVersion())) {
+                            // blaklisted candidates should be uninstalled to no longer be taken into account anymore
+                            ((RegisteredResourceImpl)candidate).setState(ResourceState.UNINSTALL);
+                        } else {
+                            second = candidate;
+                        }
                     }
                 }
                 if (second != null &&
