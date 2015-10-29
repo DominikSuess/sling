@@ -21,7 +21,7 @@ package org.apache.sling.installer.api.tasks;
 import org.apache.sling.installer.core.impl.tasks.BundleInfo;
 import org.osgi.framework.Version;
 
-public interface InstallTaskBlackList {
+public interface BundleBlacklist {
 
     boolean isBlacklisted(String symbolicName, Version version);
 

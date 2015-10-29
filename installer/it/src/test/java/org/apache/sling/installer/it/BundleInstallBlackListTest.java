@@ -19,7 +19,7 @@ package org.apache.sling.installer.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.apache.sling.installer.api.tasks.InstallTaskBlackList;
+import org.apache.sling.installer.api.tasks.BundleBlacklist;
 import org.apache.sling.installer.core.impl.tasks.BundleInfo;
 import org.junit.After;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
         assertNull("Test bundle must not be present before test", findBundle(symbolicName));
 
         // configure blacklist bundle to ignore older version
-        InstallTaskBlackList bl = new InstallTaskBlackList() {
+        BundleBlacklist bl = new BundleBlacklist() {
 
             public boolean isBlacklisted(String symbolicName, Version version) {
                 boolean isSameSymbolicName = "osgi-installer-testbundle".equals(symbolicName);
@@ -65,7 +65,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
             }
         };
 
-        ServiceRegistration<?> sr = bundleContext.registerService(InstallTaskBlackList.class.getName(), bl, null);
+        ServiceRegistration<?> sr = bundleContext.registerService(BundleBlacklist.class.getName(), bl, null);
 
         // Install first test bundle and check version
         long bundleId = 0;
@@ -130,7 +130,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
         }
 
         // configure blacklist bundle to ignore older version
-        InstallTaskBlackList bl = new InstallTaskBlackList() {
+        BundleBlacklist bl = new BundleBlacklist() {
 
             public boolean isBlacklisted(String symbolicName, Version version) {
                 boolean isSameSymbolicName = "osgi-installer-testbundle".equals(symbolicName);
@@ -139,7 +139,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
             }
         };
 
-        ServiceRegistration<?> sr = bundleContext.registerService(InstallTaskBlackList.class.getName(), bl, null);
+        ServiceRegistration<?> sr = bundleContext.registerService(BundleBlacklist.class.getName(), bl, null);
 
         // Try to uninstall current version and verify uninstall instead of
         // downgrade to blacklisted version
@@ -218,7 +218,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
         }
 
         // configure blacklist bundle to ignore 1.1 version
-        InstallTaskBlackList bl = new InstallTaskBlackList() {
+        BundleBlacklist bl = new BundleBlacklist() {
 
             public boolean isBlacklisted(String symbolicName, Version version) {
                 boolean isSameSymbolicName = "osgi-installer-testbundle".equals(symbolicName);
@@ -227,7 +227,7 @@ public class BundleInstallBlackListTest extends OsgiInstallerTestBase {
             }
         };
 
-        ServiceRegistration<?> sr = bundleContext.registerService(InstallTaskBlackList.class.getName(), bl,
+        ServiceRegistration<?> sr = bundleContext.registerService(BundleBlacklist.class.getName(), bl,
             null);
 
         // Try to uninstall current version and verify uninstall instead of

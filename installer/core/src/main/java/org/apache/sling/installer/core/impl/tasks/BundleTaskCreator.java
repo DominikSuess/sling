@@ -26,7 +26,7 @@ import org.apache.sling.installer.api.InstallableResource;
 import org.apache.sling.installer.api.ResourceChangeListener;
 import org.apache.sling.installer.api.tasks.ChangeStateTask;
 import org.apache.sling.installer.api.tasks.InstallTask;
-import org.apache.sling.installer.api.tasks.InstallTaskBlackList;
+import org.apache.sling.installer.api.tasks.BundleBlacklist;
 import org.apache.sling.installer.api.tasks.InstallTaskFactory;
 import org.apache.sling.installer.api.tasks.ResourceState;
 import org.apache.sling.installer.api.tasks.RetryHandler;
@@ -75,7 +75,7 @@ public class BundleTaskCreator
 
     private ServiceTracker st = null;
 
-    private List<InstallTaskBlackList> blacklistservices = Collections.emptyList();
+    private List<BundleBlacklist> blacklistservices = Collections.emptyList();
 
     /**
      * @see org.apache.sling.installer.core.impl.InternalService#init(org.osgi.framework.BundleContext,
@@ -90,7 +90,7 @@ public class BundleTaskCreator
 
         this.taskSupport = new TaskSupport(bc);
 
-        this.st = new ServiceTracker(bc, InstallTaskBlackList.class.getName(), null);
+        this.st = new ServiceTracker(bc, BundleBlacklist.class.getName(), null);
         this.st.open();
 
     }
@@ -310,7 +310,7 @@ public class BundleTaskCreator
         Object[] servs = st.getServices();
         if (servs != null) {
             for (Object serv : servs) {
-                InstallTaskBlackList blacklist = (InstallTaskBlackList) serv;
+                BundleBlacklist blacklist = (BundleBlacklist) serv;
                 isBlackListed |= blacklist.isBlacklisted(symbolicName, version);
                 if (isBlackListed) {
                     break;
