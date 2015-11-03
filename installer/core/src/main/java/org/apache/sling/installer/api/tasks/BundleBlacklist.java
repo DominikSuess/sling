@@ -16,9 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-@Version("1.4.0")
 package org.apache.sling.installer.api.tasks;
 
-import aQute.bnd.annotation.Version;
+import org.apache.sling.installer.core.impl.tasks.BundleInfo;
+import org.osgi.framework.Version;
 
+public interface BundleBlacklist {
+
+    boolean isBlacklisted(String symbolicName, Version version);
+
+}
